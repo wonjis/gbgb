@@ -6,12 +6,13 @@ let isLoggedIn = false;
 
 // Check auth state on page load
 firebaseApp.auth.onAuthStateChanged(async (user) => {
+    console.log('🔵 onAuthStateChanged triggered, user:', user ? user.email : 'null');
     const authLink = document.getElementById('authLink');
     const profileLink = document.getElementById('profileLink');
 
     if (user) {
         // User is logged in
-        console.log('User logged in:', user.email);
+        console.log('✅ User logged in:', user.email);
         isLoggedIn = true;
 
         // Validate @umich.edu email
@@ -29,14 +30,26 @@ firebaseApp.auth.onAuthStateChanged(async (user) => {
         }
 
         // Update nav links
-        if (authLink) {
-            authLink.textContent = 'Logout';
-        }
+        const updateNavLinks = () => {
+            const authLinkElement = document.getElementById('authLink');
+            const profileLinkElement = document.getElementById('profileLink');
 
-        // Show profile link
-        if (profileLink) {
-            profileLink.style.display = 'inline-block';
-        }
+            if (authLinkElement) {
+                console.log('✅ Changing Login to Logout');
+                authLinkElement.textContent = 'Logout';
+            } else {
+                console.warn('⚠️ authLink element not found when trying to change to Logout');
+            }
+
+            // Show profile link
+            if (profileLinkElement) {
+                profileLinkElement.style.display = 'inline-block';
+            }
+        };
+
+        // Update now and also after a small delay to handle any DOM timing issues
+        updateNavLinks();
+        setTimeout(updateNavLinks, 100);
 
         // Show welcome message on events page
         const welcomeMessage = document.getElementById('welcomeMessage');
@@ -114,7 +127,7 @@ firebaseApp.auth.onAuthStateChanged(async (user) => {
 
     } else {
         // User is logged out
-        console.log('User logged out');
+        console.log('❌ User logged out (or not logged in)');
         isLoggedIn = false;
 
         // Update nav links
@@ -146,7 +159,7 @@ function showAuthModal() {
     console.log('Opening auth modal...');
     const authModal = document.getElementById('authModal');
     if (authModal) {
-        authModal.classList.remove('hidden');
+        authModal.style.display = 'flex';
     } else {
         console.error('Auth modal not found!');
     }
@@ -158,7 +171,7 @@ function closeAuthModal() {
     const authModal = document.getElementById('authModal');
     if (authModal) {
         console.log('Closing auth modal');
-        authModal.classList.add('hidden');
+        authModal.style.display = 'none';
     } else {
         console.log('Auth modal element not found');
     }
@@ -226,15 +239,18 @@ async function handleGoogleSignIn() {
 }
 
 // Handle redirect result (when user returns from Google sign-in)
+console.log('🔵 Checking for redirect result...');
 firebaseApp.auth.getRedirectResult().then((result) => {
+    console.log('🔵 Redirect result:', result);
     if (result.user) {
-        console.log('Sign-in via redirect successful:', result.user.email);
+        console.log('✅ Sign-in via redirect successful:', result.user.email);
 
         // Validate @umich.edu email
         if (!result.user.email.toLowerCase().endsWith('@umich.edu')) {
             alert('Only @umich.edu email addresses are allowed. Please sign in with your UMich Google account.');
             firebaseApp.auth.signOut();
         } else {
+            console.log('✅ Email validated, user should be logged in');
             // Close modal on successful redirect sign-in (wait for DOM to be ready)
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => {
@@ -252,10 +268,12 @@ firebaseApp.auth.getRedirectResult().then((result) => {
                 }
             }
         }
+    } else {
+        console.log('🔵 No redirect result found (this is normal if user did not just sign in)');
     }
 }).catch((error) => {
     if (error.code !== 'auth/popup-closed-by-user') {
-        console.error('Redirect sign-in error:', error);
+        console.error('❌ Redirect sign-in error:', error);
     }
 });
 

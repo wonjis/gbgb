@@ -22,7 +22,6 @@
                 <li><a href="index.html" class="nav-link active">Home</a></li>
                 <li><a href="events.html" class="nav-link">Browse Events</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#" class="nav-link" id="authLink">Login</a></li>
             </ul>
         </nav>
     </header>
@@ -31,10 +30,9 @@
     <section class="hero">
         <div class="container">
             <h1>Discover Every Event at UMich</h1>
-            <p>One platform. All campus events. Personalized for you.</p>
+            <p>One platform. All campus events.</p>
             <p>Never miss an opportunity - from career fairs to cultural events, we've got you covered.</p>
             <a href="events.html" class="btn btn-primary btn-lg">Explore Events</a>
-            <a href="#" class="btn btn-outline btn-lg" id="heroAuthBtn">Sign Up / Login</a>
         </div>
     </section>
 
@@ -52,8 +50,8 @@
 
             <div class="card">
                 <div class="card-body">
-                    <h3 style="text-align: center;">🎯 Personalized For You</h3>
-                    <p>Get event recommendations tailored to your school, interests, and career goals. See what matters most to you first.</p>
+                    <h3 style="text-align: center;">🔎 Easy Discovery</h3>
+                    <p>Powerful search and filtering tools help you find events by category, school, date, and location. Find what you're looking for fast.</p>
                 </div>
             </div>
 
@@ -137,7 +135,7 @@
     <section class="hero" style="padding: 2rem 0;">
         <div class="container text-center">
             <h2>Ready to Get Started?</h2>
-            <p class="mb-4">Create your personalized event feed in under 2 minutes.</p>
+            <p class="mb-4">Explore all campus events in one place.</p>
             <a href="events.html" class="btn btn-primary btn-lg">Browse Events Now</a>
         </div>
     </section>
@@ -171,7 +169,6 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="events.html">Browse Events</a></li>
                         <li><a href="#about">About</a></li>
-                        <li><a href="profile.html">My Profile</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -198,12 +195,10 @@
     <!-- Scripts -->
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <!-- App Scripts -->
     <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
 
     <script>
         // Mobile menu toggle
@@ -228,12 +223,6 @@
                     target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
-        });
-
-        // Redirect auth buttons to events page (which will show login if needed)
-        document.getElementById('heroAuthBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = 'events.html';
         });
     </script>
 </body>

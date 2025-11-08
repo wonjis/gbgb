@@ -13,7 +13,6 @@ let currentFilters = {
 };
 let eventsPerPage = 20;
 let currentPage = 1;
-let userPreferences = null;
 
 // Initialize events page
 document.addEventListener('DOMContentLoaded', async () => {
@@ -34,12 +33,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Setup event listeners
     setupEventListeners();
-
-    // Load user preferences if logged in
-    const user = firebaseApp.auth.currentUser;
-    if (user) {
-        await loadUserPreferences(user.uid);
-    }
 
     // Load events
     await loadEvents();
@@ -82,19 +75,6 @@ function setupEventListeners() {
     }
 }
 
-// Load user preferences for personalization
-async function loadUserPreferences(uid) {
-    try {
-        const userDoc = await firebaseApp.usersCollection.doc(uid).get();
-        if (userDoc.exists) {
-            userPreferences = userDoc.data();
-            console.log('User preferences loaded:', userPreferences);
-        }
-    } catch (error) {
-        console.error('Error loading user preferences:', error);
-    }
-}
-
 // Load events from Firestore
 async function loadEvents() {
     const loadingState = document.getElementById('loadingState');
@@ -124,11 +104,6 @@ async function loadEvents() {
             });
         });
 
-        // Apply personalization if user is logged in
-        if (userPreferences) {
-            allEvents = personalizeEvents(allEvents);
-        }
-
         // Apply filters
         applyFilters();
 
@@ -153,55 +128,6 @@ async function loadEvents() {
             `;
         }
     }
-}
-
-// Personalize events based on user preferences
-function personalizeEvents(events) {
-    if (!userPreferences) return events;
-
-    return events.map(event => {
-        let score = 0;
-
-        // Match school
-        if (event.school === userPreferences.school) {
-            score += 10;
-        }
-
-        // Match interests
-        if (userPreferences.interests && event.category) {
-            const matchingInterests = userPreferences.interests.filter(interest =>
-                event.category.some(cat => cat.toLowerCase().includes(interest.toLowerCase()))
-            );
-            score += matchingInterests.length * 5;
-        }
-
-        // Match career goals
-        if (userPreferences.careerGoals && event.category) {
-            const matchingGoals = userPreferences.careerGoals.filter(goal =>
-                event.category.some(cat => cat.toLowerCase().includes(goal.toLowerCase()))
-            );
-            score += matchingGoals.length * 5;
-        }
-
-        // Boost recent events
-        if (event.createdAt && event.createdAt.toDate) {
-            const daysSinceCreation = (Date.now() - event.createdAt.toDate().getTime()) / (1000 * 60 * 60 * 24);
-            if (daysSinceCreation < 7) {
-                score += 3;
-            }
-        }
-
-        return { ...event, personalityScore: score };
-    }).sort((a, b) => {
-        // Sort by personality score first, then by date
-        if (b.personalityScore !== a.personalityScore) {
-            return b.personalityScore - a.personalityScore;
-        }
-        // If scores are equal, sort by date
-        const dateA = a.date && a.date.toDate ? a.date.toDate() : new Date(0);
-        const dateB = b.date && b.date.toDate ? b.date.toDate() : new Date(0);
-        return dateA - dateB;
-    });
 }
 
 // Handle filter chip click

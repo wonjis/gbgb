@@ -15,20 +15,16 @@ console.log('🔵 Initializing Firebase...');
 firebase.initializeApp(firebaseConfig);
 
 // Initialize services
-const auth = firebase.auth();
 const db = firebase.firestore();
 
 // Firestore collection references
 const eventsCollection = db.collection('events');
-const usersCollection = db.collection('users');
 const sourcesCollection = db.collection('sources');
 
 // Export for use in other files
 window.firebaseApp = {
-  auth,
   db,
   eventsCollection,
-  usersCollection,
   sourcesCollection
 };
 
