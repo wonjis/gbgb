@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View event details for UMich events">
+    <title>Event Details - UMich Calendar Aggregator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="index.html" class="logo">
+                <span>📅</span>
+                <span>UMich Events</span>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="events.html" class="nav-link">Browse Events</a></li>
+                <li><a href="profile.html" class="nav-link" id="profileLink">Profile</a></li>
+                <li><a href="#" class="nav-link" id="authLink">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container" style="padding: 2rem 1.5rem;">
+        <!-- Back Button -->
+        <a href="events.html" class="btn btn-outline btn-sm mb-3">← Back to Events</a>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden alert alert-error">
+            <p><strong>Error:</strong> Event not found or could not be loaded.</p>
+            <a href="events.html" class="btn btn-primary mt-2">Browse All Events</a>
+        </div>
+
+        <!-- Event Details Container -->
+        <div id="eventDetails" class="hidden">
+            <div class="card" style="padding: 2rem;">
+                <!-- Event Image -->
+                <div id="eventImageContainer" class="mb-3 hidden">
+                    <img id="eventImage" src="" alt="Event Image" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px;">
+                </div>
+
+                <div id="eventImagePlaceholder" class="hidden" style="width: 100%; height: 300px; background: linear-gradient(135deg, #00274C 0%, #007BBF 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 5rem; color: #FFCB05; margin-bottom: 1.5rem;">
+                    📅
+                </div>
+
+                <!-- Event Header -->
+                <div class="event-header mb-3">
+                    <div>
+                        <h1 id="eventTitle" style="color: #00274C; margin-bottom: 1rem;"></h1>
+                        <div id="eventTags" class="event-tags mb-3"></div>
+                    </div>
+                </div>
+
+                <!-- Event Meta Information -->
+                <div class="event-meta mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="event-meta-item">
+                        <strong>📅 Date:</strong>
+                        <span id="eventDate"></span>
+                    </div>
+                    <div class="event-meta-item">
+                        <strong>🕒 Time:</strong>
+                        <span id="eventTime"></span>
+                    </div>
+                    <div class="event-meta-item">
+                        <strong>📍 Location:</strong>
+                        <span id="eventLocation"></span>
+                    </div>
+                    <div class="event-meta-item">
+                        <strong>🏫 School:</strong>
+                        <span id="eventSchool"></span>
+                    </div>
+                    <div class="event-meta-item" id="eventOrgContainer" class="hidden">
+                        <strong>👥 Organization:</strong>
+                        <span id="eventOrganization"></span>
+                    </div>
+                </div>
+
+                <!-- Event Description -->
+                <div class="mb-4">
+                    <h3 style="color: #00274C; margin-bottom: 1rem;">About This Event</h3>
+                    <p id="eventDescription" style="line-height: 1.8; color: #4A4A4A;"></p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-footer" style="display: flex; gap: 1rem; flex-wrap: wrap; padding-top: 1.5rem; border-top: 2px solid #E5E5E5;">
+                    <a id="registerButton" href="#" target="_blank" class="btn btn-primary">
+                        Register for Event →
+                    </a>
+                    <button id="addToCalendarBtn" class="btn btn-secondary">
+                        📅 Add to Calendar
+                    </button>
+                    <button id="saveEventBtn" class="btn btn-outline">
+                        🔖 Save Event
+                    </button>
+                    <button id="shareEventBtn" class="btn btn-outline">
+                        🔗 Share
+                    </button>
+                </div>
+
+                <!-- Source Link -->
+                <div class="mt-3">
+                    <small>
+                        <strong>Source:</strong>
+                        <a id="eventSourceLink" href="#" target="_blank" rel="noopener"></a>
+                    </small>
+                </div>
+            </div>
+
+            <!-- Related Events -->
+            <div class="mt-4">
+                <h3 style="color: #00274C; margin-bottom: 1rem;">Related Events</h3>
+                <div id="relatedEvents" class="events-grid">
+                    <!-- Related events will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+        <div class="card" style="max-width: 500px; width: 90%;">
+            <div class="card-header">
+                <h3>Share This Event</h3>
+                <button id="closeShareModal" style="float: right; font-size: 1.5rem; background: none; cursor: pointer;">&times;</button>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">Event Link</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="shareLink" class="form-control" readonly>
+                        <button id="copyLinkBtn" class="btn btn-primary btn-sm">Copy</button>
+                    </div>
+                    <small id="copySuccess" class="hidden" style="color: #28A745;">Link copied to clipboard!</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 UMich Calendar Aggregator. Made with 💙 and 💛 by UMich students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Get event ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+
+        if (!eventId) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+        } else {
+            loadEventDetails(eventId);
+        }
+
+        async function loadEventDetails(eventId) {
+            try {
+                const eventDoc = await firebaseApp.eventsCollection.doc(eventId).get();
+
+                if (!eventDoc.exists) {
+                    throw new Error('Event not found');
+                }
+
+                const event = eventDoc.data();
+                displayEventDetails(event, eventId);
+
+                // Load related events
+                loadRelatedEvents(event);
+
+            } catch (error) {
+                console.error('Error loading event:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+            }
+        }
+
+        function displayEventDetails(event, eventId) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('eventDetails').classList.remove('hidden');
+
+            // Title
+            document.getElementById('eventTitle').textContent = event.name;
+
+            // Image or placeholder
+            if (event.imageUrl) {
+                document.getElementById('eventImageContainer').classList.remove('hidden');
+                document.getElementById('eventImage').src = event.imageUrl;
+                document.getElementById('eventImage').alt = event.name;
+            } else {
+                document.getElementById('eventImagePlaceholder').classList.remove('hidden');
+            }
+
+            // Tags
+            const tagsContainer = document.getElementById('eventTags');
+            tagsContainer.innerHTML = '';
+            if (event.category && event.category.length > 0) {
+                event.category.forEach(cat => {
+                    const tag = document.createElement('span');
+                    tag.className = 'tag tag-category';
+                    tag.textContent = cat;
+                    tagsContainer.appendChild(tag);
+                });
+            }
+            const schoolTag = document.createElement('span');
+            schoolTag.className = 'tag tag-school';
+            schoolTag.textContent = event.school;
+            tagsContainer.appendChild(schoolTag);
+
+            // Date & Time
+            if (event.date && event.date.toDate) {
+                const dateObj = event.date.toDate();
+                document.getElementById('eventDate').textContent = dateObj.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } else {
+                document.getElementById('eventDate').textContent = 'Date TBD';
+            }
+
+            document.getElementById('eventTime').textContent = event.time || 'Time TBD';
+            document.getElementById('eventLocation').textContent = event.location || 'Location TBD';
+            document.getElementById('eventSchool').textContent = event.school || 'N/A';
+
+            if (event.organization) {
+                document.getElementById('eventOrgContainer').classList.remove('hidden');
+                document.getElementById('eventOrganization').textContent = event.organization;
+            }
+
+            // Description
+            document.getElementById('eventDescription').textContent = event.description || event.shortDescription || 'No description available.';
+
+            // Buttons
+            if (event.registrationLink) {
+                document.getElementById('registerButton').href = event.registrationLink;
+            } else {
+                document.getElementById('registerButton').style.display = 'none';
+            }
+
+            if (event.sourceUrl) {
+                document.getElementById('eventSourceLink').href = event.sourceUrl;
+                document.getElementById('eventSourceLink').textContent = event.sourceUrl;
+            }
+
+            // Add to Calendar
+            document.getElementById('addToCalendarBtn').addEventListener('click', () => {
+                generateICSFile(event);
+            });
+
+            // Share button
+            document.getElementById('shareEventBtn').addEventListener('click', () => {
+                document.getElementById('shareLink').value = window.location.href;
+                document.getElementById('shareModal').classList.remove('hidden');
+            });
+
+            document.getElementById('closeShareModal').addEventListener('click', () => {
+                document.getElementById('shareModal').classList.add('hidden');
+            });
+
+            document.getElementById('copyLinkBtn').addEventListener('click', () => {
+                const linkInput = document.getElementById('shareLink');
+                linkInput.select();
+                document.execCommand('copy');
+                document.getElementById('copySuccess').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('copySuccess').classList.add('hidden');
+                }, 3000);
+            });
+
+            // Save event (requires auth)
+            document.getElementById('saveEventBtn').addEventListener('click', async () => {
+                const user = firebaseApp.auth.currentUser;
+                if (!user) {
+                    alert('Please login to save events');
+                    return;
+                }
+                // Save logic will be implemented in utils.js
+                alert('Event saved! (Feature coming soon)');
+            });
+        }
+
+        function generateICSFile(event) {
+            // Generate .ics file for calendar import
+            const eventDate = event.date && event.date.toDate ? event.date.toDate() : new Date();
+            const dateStr = eventDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//UMich Events//EN
+BEGIN:VEVENT
+UID:${event.eventId || 'event'}@umich-events.com
+DTSTAMP:${dateStr}
+DTSTART:${dateStr}
+SUMMARY:${event.name}
+DESCRIPTION:${(event.description || event.shortDescription || '').replace(/\n/g, '\\n')}
+LOCATION:${event.location || ''}
+URL:${event.registrationLink || event.sourceUrl || ''}
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${event.name.replace(/[^a-z0-9]/gi, '-')}.ics`;
+            link.click();
+        }
+
+        async function loadRelatedEvents(currentEvent) {
+            try {
+                // Find events in the same category or school
+                const relatedQuery = firebaseApp.eventsCollection
+                    .where('school', '==', currentEvent.school)
+                    .where('isActive', '==', true)
+                    .limit(4);
+
+                const snapshot = await relatedQuery.get();
+                const relatedContainer = document.getElementById('relatedEvents');
+                relatedContainer.innerHTML = '';
+
+                if (snapshot.empty) {
+                    relatedContainer.innerHTML = '<p>No related events found.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const event = doc.data();
+                    if (doc.id === eventId) return; // Skip current event
+
+                    const eventCard = createEventCard(event, doc.id);
+                    relatedContainer.appendChild(eventCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading related events:', error);
+            }
+        }
+
+        function createEventCard(event, id) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.cursor = 'pointer';
+            card.onclick = () => window.location.href = `event-details.html?id=${id}`;
+
+            const dateStr = event.date && event.date.toDate
+                ? event.date.toDate().toLocaleDateString()
+                : 'Date TBD';
+
+            card.innerHTML = `
+                <h4 style="color: #00274C;">${event.name}</h4>
+                <p style="color: #4A4A4A; font-size: 0.9rem;">
+                    📅 ${dateStr}<br>
+                    📍 ${event.location || 'Location TBD'}
+                </p>
+            `;
+
+            return card;
+        }
+    </script>
+</body>
+</html>

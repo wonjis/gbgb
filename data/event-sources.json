@@ -1,0 +1,300 @@
+{
+  "sources": [
+    {
+      "id": "ross-business",
+      "name": "Ross School of Business",
+      "url": "https://michiganross.umich.edu/events",
+      "school": "Ross School of Business",
+      "category": ["career", "networking", "academic"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Main event calendar for Ross"
+    },
+    {
+      "id": "coe-events",
+      "name": "College of Engineering",
+      "url": "https://events.engin.umich.edu/",
+      "school": "College of Engineering",
+      "category": ["academic", "career", "technical"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Engineering event aggregator"
+    },
+    {
+      "id": "lsa-events",
+      "name": "College of LSA",
+      "url": "https://lsa.umich.edu/lsa/news-events/all-events.html",
+      "school": "College of Literature, Science, and the Arts",
+      "category": ["academic", "cultural", "social"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "LSA main events page"
+    },
+    {
+      "id": "tauber-institute",
+      "name": "Tauber Institute",
+      "url": "https://tauber.umich.edu/events",
+      "school": "Tauber Institute",
+      "category": ["career", "academic", "entrepreneurship"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Operations and management events"
+    },
+    {
+      "id": "zli-events",
+      "name": "Zell Lurie Institute",
+      "url": "https://zli.umich.edu/events/",
+      "school": "Zell Lurie Institute",
+      "category": ["entrepreneurship", "networking", "startup"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Entrepreneurship and innovation events"
+    },
+    {
+      "id": "umsi-events",
+      "name": "School of Information",
+      "url": "https://www.si.umich.edu/events",
+      "school": "School of Information",
+      "category": ["tech", "academic", "career"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Information science and tech events"
+    },
+    {
+      "id": "career-center",
+      "name": "University Career Center",
+      "url": "https://careercenter.umich.edu/events",
+      "school": "University Career Center",
+      "category": ["career", "networking", "professional"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Career development and job search events"
+    },
+    {
+      "id": "cfe-events",
+      "name": "Center for Entrepreneurship",
+      "url": "https://cfe.umich.edu/events/",
+      "school": "Center for Entrepreneurship",
+      "category": ["entrepreneurship", "startup", "networking"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Startup and entrepreneurship programming"
+    },
+    {
+      "id": "erb-institute",
+      "name": "Erb Institute",
+      "url": "https://erb.umich.edu/events/",
+      "school": "Erb Institute",
+      "category": ["sustainability", "academic", "networking"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Sustainability and business events"
+    },
+    {
+      "id": "law-school",
+      "name": "Law School",
+      "url": "https://law.umich.edu/events",
+      "school": "Law School",
+      "category": ["academic", "career", "legal"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Law school lectures and events"
+    },
+    {
+      "id": "public-policy",
+      "name": "Ford School of Public Policy",
+      "url": "https://fordschool.umich.edu/events",
+      "school": "Gerald R. Ford School of Public Policy",
+      "category": ["academic", "policy", "public service"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Public policy and governance events"
+    },
+    {
+      "id": "stamps-school",
+      "name": "Stamps School of Art & Design",
+      "url": "https://stamps.umich.edu/events",
+      "school": "Stamps School of Art & Design",
+      "category": ["cultural", "art", "creative"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Art exhibitions and creative events"
+    },
+    {
+      "id": "smtd-events",
+      "name": "School of Music, Theatre & Dance",
+      "url": "https://smtd.umich.edu/events/",
+      "school": "School of Music, Theatre & Dance",
+      "category": ["cultural", "performance", "arts"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Performances and cultural events"
+    },
+    {
+      "id": "umma-events",
+      "name": "University of Michigan Museum of Art",
+      "url": "https://umma.umich.edu/calendar/",
+      "school": "UMMA",
+      "category": ["cultural", "art", "educational"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Museum exhibitions and programs"
+    },
+    {
+      "id": "library-events",
+      "name": "University Library",
+      "url": "https://www.lib.umich.edu/events",
+      "school": "University Library",
+      "category": ["academic", "workshops", "educational"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Library workshops and seminars"
+    },
+    {
+      "id": "isr-events",
+      "name": "Institute for Social Research",
+      "url": "https://isr.umich.edu/events/",
+      "school": "ISR",
+      "category": ["academic", "research", "seminars"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Social science research events"
+    },
+    {
+      "id": "graham-sustainability",
+      "name": "Graham Sustainability Institute",
+      "url": "https://graham.umich.edu/events",
+      "school": "Graham Sustainability Institute",
+      "category": ["sustainability", "environmental", "academic"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Environmental and sustainability events"
+    },
+    {
+      "id": "athletic-events",
+      "name": "Michigan Athletics",
+      "url": "https://mgoblue.com/calendar",
+      "school": "Athletics",
+      "category": ["sports", "recreation", "social"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Sporting events and games"
+    },
+    {
+      "id": "sph-events",
+      "name": "School of Public Health",
+      "url": "https://sph.umich.edu/events/",
+      "school": "School of Public Health",
+      "category": ["academic", "health", "seminars"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Public health lectures and events"
+    },
+    {
+      "id": "medical-school",
+      "name": "Medical School",
+      "url": "https://medicine.umich.edu/medschool/events",
+      "school": "Medical School",
+      "category": ["academic", "health", "research"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Medical research and education events"
+    },
+    {
+      "id": "umich-events-main",
+      "name": "U-M Events Calendar",
+      "url": "https://events.umich.edu/",
+      "school": "University-wide",
+      "category": ["all"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Main university event aggregator - primary source"
+    },
+    {
+      "id": "mcommunity",
+      "name": "MCommunity Groups",
+      "url": "https://mcommunity.umich.edu/",
+      "school": "Student Organizations",
+      "category": ["social", "clubs", "student-life"],
+      "scrapingFrequency": "weekly",
+      "active": false,
+      "notes": "Student org directory - requires individual group scraping"
+    },
+    {
+      "id": "maize-pages",
+      "name": "Maize Pages",
+      "url": "https://maizepages.umich.edu/events",
+      "school": "Student Organizations",
+      "category": ["social", "clubs", "student-life", "networking"],
+      "scrapingFrequency": "daily",
+      "active": true,
+      "notes": "Student organization event aggregator - high priority"
+    },
+    {
+      "id": "csg-events",
+      "name": "Central Student Government",
+      "url": "https://csg.umich.edu/events/",
+      "school": "CSG",
+      "category": ["social", "advocacy", "student-life"],
+      "scrapingFrequency": "weekly",
+      "active": true,
+      "notes": "Student government hosted events"
+    },
+    {
+      "id": "diversity-equity",
+      "name": "Office of Diversity, Equity & Inclusion",
+      "url": "https://diversity.umich.edu/events/",
+      "school": "DEI Office",
+      "category": ["cultural", "diversity", "social"],
+      "scrapingFrequency": "weekly",
+      "active": true,
+      "notes": "DEI programming and events"
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-11-08",
+    "totalSources": 25,
+    "activeSources": 24,
+    "categories": [
+      "academic",
+      "career",
+      "networking",
+      "entrepreneurship",
+      "startup",
+      "cultural",
+      "social",
+      "sports",
+      "sustainability",
+      "health",
+      "tech",
+      "arts",
+      "diversity",
+      "student-life"
+    ],
+    "notes": "Priority sources: events.umich.edu (main aggregator), maizepages.umich.edu (student orgs), individual school calendars"
+  },
+  "scrapingNotes": {
+    "bestPractices": [
+      "Respect robots.txt for each domain",
+      "Implement rate limiting (1 request per 2 seconds minimum)",
+      "Use User-Agent string identifying the bot",
+      "Cache results to avoid redundant scraping",
+      "Log all scraping activities for debugging",
+      "Implement error handling for site structure changes"
+    ],
+    "challenges": [
+      "Some sites use JavaScript rendering (may need Puppeteer/Playwright)",
+      "Event formats vary across schools",
+      "Some sites may require authentication",
+      "Date formats are inconsistent across sources",
+      "Need to handle timezone conversions (EST)"
+    ],
+    "legalConsiderations": [
+      "Verify compliance with U-M IT acceptable use policy",
+      "Only scrape publicly available data",
+      "Do not store personal information (FERPA compliance)",
+      "Consider reaching out to IT for official API access"
+    ]
+  }
+}

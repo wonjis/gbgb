@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your UMich Events profile and preferences">
+    <title>My Profile - UMich Calendar Aggregator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="index.html" class="logo">
+                <span>📅</span>
+                <span>UMich Events</span>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="events.html" class="nav-link">Browse Events</a></li>
+                <li><a href="profile.html" class="nav-link active">Profile</a></li>
+                <li><a href="#" class="nav-link" id="authLink">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container" style="padding: 2rem 1.5rem;">
+        <!-- Auth Required Message -->
+        <div id="authRequired" class="hidden alert alert-info">
+            <p><strong>Please login to access your profile.</strong></p>
+            <a href="events.html" class="btn btn-primary mt-2">Go to Login</a>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Profile Container -->
+        <div id="profileContainer" class="hidden">
+            <h1 class="mb-3" style="color: #00274C;">My Profile</h1>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 2rem;">
+                <!-- Profile Setup / Edit Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Profile Information</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">First Name</label>
+                                <input type="text" id="firstName" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input type="text" id="lastName" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" id="email" class="form-control" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="school">School / College</label>
+                                <select id="school" class="form-control" required>
+                                    <option value="">Select your school</option>
+                                    <option value="Ross School of Business">Ross School of Business</option>
+                                    <option value="College of Engineering">College of Engineering</option>
+                                    <option value="College of LSA">College of Literature, Science, and the Arts (LSA)</option>
+                                    <option value="School of Information">School of Information</option>
+                                    <option value="Law School">Law School</option>
+                                    <option value="Ford School of Public Policy">Ford School of Public Policy</option>
+                                    <option value="School of Public Health">School of Public Health</option>
+                                    <option value="Medical School">Medical School</option>
+                                    <option value="School of Music, Theatre & Dance">School of Music, Theatre & Dance</option>
+                                    <option value="Stamps School of Art & Design">Stamps School of Art & Design</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="program">Program</label>
+                                <select id="program" class="form-control" required>
+                                    <option value="">Select your program</option>
+                                    <option value="Undergraduate">Undergraduate</option>
+                                    <option value="Graduate">Graduate (Master's)</option>
+                                    <option value="PhD">PhD</option>
+                                    <option value="Professional">Professional Program</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="year">Year</label>
+                                <select id="year" class="form-control" required>
+                                    <option value="">Select your year</option>
+                                    <option value="Freshman">Freshman</option>
+                                    <option value="Sophomore">Sophomore</option>
+                                    <option value="Junior">Junior</option>
+                                    <option value="Senior">Senior</option>
+                                    <option value="1st Year Graduate">1st Year Graduate</option>
+                                    <option value="2nd Year Graduate">2nd Year Graduate</option>
+                                    <option value="3rd+ Year Graduate">3rd+ Year Graduate</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Interests (Select all that apply)</label>
+                                <div class="checkbox-group">
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="entrepreneurship"> Entrepreneurship
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="AI"> Artificial Intelligence
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="sustainability"> Sustainability
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="finance"> Finance
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="consulting"> Consulting
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="tech"> Technology
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="healthcare"> Healthcare
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="social-impact"> Social Impact
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="arts"> Arts & Culture
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="research"> Research
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="networking"> Networking
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="interests" value="leadership"> Leadership
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Career Goals (Select all that apply)</label>
+                                <div class="checkbox-group">
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="consulting"> Consulting
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="tech"> Tech / Software
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="finance"> Finance / Banking
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="startup"> Startup / Founder
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="nonprofit"> Nonprofit / NGO
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="government"> Government / Policy
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="research"> Research / Academia
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="healthcare"> Healthcare
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="law"> Law / Legal
+                                    </label>
+                                    <label class="form-checkbox">
+                                        <input type="checkbox" name="careerGoals" value="creative"> Creative / Design
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Save Profile</button>
+                        </form>
+
+                        <div id="saveSuccess" class="hidden alert alert-success mt-3">
+                            Profile saved successfully!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Preferences -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Email Preferences</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="emailPrefsForm">
+                            <div class="form-group">
+                                <label class="form-label" for="digestFrequency">Email Digest Frequency</label>
+                                <select id="digestFrequency" class="form-control">
+                                    <option value="none">No emails</option>
+                                    <option value="daily">Daily Digest</option>
+                                    <option value="weekly">Weekly Digest (Recommended)</option>
+                                    <option value="biweekly">Bi-weekly Digest</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-checkbox">
+                                    <input type="checkbox" id="eventAlerts"> Enable event alerts for new events matching my interests
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="reminderBefore">Reminder Before Event</label>
+                                <select id="reminderBefore" class="form-control">
+                                    <option value="0">No reminders</option>
+                                    <option value="1">1 hour before</option>
+                                    <option value="24">24 hours before</option>
+                                    <option value="48">48 hours before</option>
+                                    <option value="168">1 week before</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary btn-block">Save Email Preferences</button>
+                        </form>
+
+                        <div id="emailPrefsSuccess" class="hidden alert alert-success mt-3">
+                            Email preferences saved!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Saved Events -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Saved Events</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="savedEventsList">
+                            <p class="text-center" style="color: #4A4A4A;">You haven't saved any events yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Account Actions</h2>
+                    </div>
+                    <div class="card-body">
+                        <button id="logoutBtn" class="btn btn-outline btn-block">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 UMich Calendar Aggregator. Made with 💙 and 💛 by UMich students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

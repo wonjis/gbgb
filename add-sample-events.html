@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sample Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #FFCB05;
+            color: #00274C;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #E6B800;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Sample UMich Events</h1>
+    <p>This will populate your database with 10 sample events for testing.</p>
+
+    <button id="addBtn">Add Sample Events to Firestore</button>
+
+    <div id="status">Click the button above to add sample events...</div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvNSLfo6Bj3adQrfP7uOUY88nBpL3iRP0",
+            authDomain: "umichcalendar.firebaseapp.com",
+            projectId: "umichcalendar",
+            storageBucket: "umichcalendar.firebasestorage.app",
+            messagingSenderId: "871016805897",
+            appId: "1:871016805897:web:a480968d08e05cca996ad8",
+            measurementId: "G-JVJE7XZN4S"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const status = document.getElementById('status');
+
+        // Sample events
+        const sampleEvents = [
+            {
+                name: "Ross Career Fair 2025",
+                description: "Annual career fair featuring 50+ companies recruiting for internships and full-time roles in consulting, finance, and tech.",
+                shortDescription: "Annual career fair with 50+ companies",
+                date: new Date('2025-02-15T14:00:00'),
+                time: "2:00 PM - 6:00 PM",
+                location: "Ross School of Business, Robertson Auditorium",
+                locationType: "physical",
+                school: "Ross School of Business",
+                organization: "Ross Career Services",
+                category: ["career", "networking"],
+                registrationLink: "https://michiganross.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://michiganross.umich.edu/events",
+                sourceId: "ross-business",
+                isActive: true,
+                tags: ["recruiting", "jobs", "internships"]
+            },
+            {
+                name: "Zell Lurie Startup Pitch Competition",
+                description: "Student entrepreneurs pitch their startups to venture capitalists and industry leaders. $50,000 in prizes!",
+                shortDescription: "Student startup pitch competition with $50k in prizes",
+                date: new Date('2025-03-20T18:00:00'),
+                time: "6:00 PM - 9:00 PM",
+                location: "Zell Lurie Institute",
+                locationType: "physical",
+                school: "Zell Lurie Institute",
+                organization: "ZLI",
+                category: ["entrepreneurship", "startup", "networking"],
+                registrationLink: "https://zli.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://zli.umich.edu/events",
+                sourceId: "zli-events",
+                isActive: true,
+                tags: ["pitch", "venture capital", "funding"]
+            },
+            {
+                name: "Engineering Honors Convocation",
+                description: "Celebrating the achievements of graduating engineers. Features keynote speaker from Google AI.",
+                shortDescription: "Engineering graduation ceremony with Google AI keynote",
+                date: new Date('2025-04-25T15:00:00'),
+                time: "3:00 PM - 5:00 PM",
+                location: "Michigan Stadium",
+                locationType: "physical",
+                school: "College of Engineering",
+                organization: "CoE",
+                category: ["academic", "celebration"],
+                registrationLink: "https://events.engin.umich.edu",
+                imageUrl: "",
+                sourceUrl: "https://events.engin.umich.edu",
+                sourceId: "coe-events",
+                isActive: true,
+                tags: ["graduation", "honors"]
+            },
+            {
+                name: "AI & Machine Learning Workshop",
+                description: "Hands-on workshop covering neural networks, deep learning, and practical applications. Beginner friendly!",
+                shortDescription: "Beginner-friendly AI/ML workshop",
+                date: new Date('2025-02-10T13:00:00'),
+                time: "1:00 PM - 4:00 PM",
+                location: "School of Information, North Quad",
+                locationType: "physical",
+                school: "School of Information",
+                organization: "UMSI",
+                category: ["academic", "tech", "workshop"],
+                registrationLink: "https://si.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://si.umich.edu/events",
+                sourceId: "umsi-events",
+                isActive: true,
+                tags: ["AI", "machine learning", "workshop"]
+            },
+            {
+                name: "Sustainability Summit 2025",
+                description: "Join students, faculty, and industry leaders to discuss climate solutions and sustainable business practices.",
+                shortDescription: "Climate solutions and sustainable business summit",
+                date: new Date('2025-03-05T09:00:00'),
+                time: "9:00 AM - 5:00 PM",
+                location: "Erb Institute",
+                locationType: "physical",
+                school: "Erb Institute",
+                organization: "Erb Institute",
+                category: ["sustainability", "academic", "networking"],
+                registrationLink: "https://erb.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://erb.umich.edu/events",
+                sourceId: "erb-institute",
+                isActive: true,
+                tags: ["climate", "sustainability", "green business"]
+            },
+            {
+                name: "Consulting Club Info Session",
+                description: "Learn about management consulting careers and how to break into the industry. Q&A with McKinsey consultants.",
+                shortDescription: "Consulting careers info session with McKinsey",
+                date: new Date('2025-02-08T19:00:00'),
+                time: "7:00 PM - 8:30 PM",
+                location: "Zoom (Virtual)",
+                locationType: "virtual",
+                school: "Ross School of Business",
+                organization: "Michigan Consulting Club",
+                category: ["career", "networking"],
+                registrationLink: "https://maizepages.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://maizepages.umich.edu/events",
+                sourceId: "maize-pages",
+                isActive: true,
+                tags: ["consulting", "McKinsey", "careers"]
+            },
+            {
+                name: "International Student Welcome Reception",
+                description: "Connect with fellow international students and learn about campus resources. Free food and refreshments!",
+                shortDescription: "Welcome reception for international students",
+                date: new Date('2025-02-01T17:00:00'),
+                time: "5:00 PM - 7:00 PM",
+                location: "International Center, 603 E Madison",
+                locationType: "physical",
+                school: "University-wide",
+                organization: "International Center",
+                category: ["social", "cultural", "networking"],
+                registrationLink: "https://events.umich.edu",
+                imageUrl: "",
+                sourceUrl: "https://events.umich.edu",
+                sourceId: "umich-events-main",
+                isActive: true,
+                tags: ["international", "diversity", "community"]
+            },
+            {
+                name: "Tech Talks: Cybersecurity in 2025",
+                description: "Industry experts discuss emerging cybersecurity threats and defense strategies. Open to all majors.",
+                shortDescription: "Cybersecurity trends and defense strategies",
+                date: new Date('2025-03-12T18:00:00'),
+                time: "6:00 PM - 7:30 PM",
+                location: "Beyster Building, Room 1670",
+                locationType: "physical",
+                school: "College of Engineering",
+                organization: "CoE Tech Talks",
+                category: ["tech", "academic", "career"],
+                registrationLink: "https://events.engin.umich.edu",
+                imageUrl: "",
+                sourceUrl: "https://events.engin.umich.edu",
+                sourceId: "coe-events",
+                isActive: true,
+                tags: ["cybersecurity", "tech", "security"]
+            },
+            {
+                name: "Michigan vs. Ohio State Basketball",
+                description: "Cheer on the Wolverines in this classic rivalry matchup! Student tickets available.",
+                shortDescription: "Michigan vs. OSU basketball game",
+                date: new Date('2025-02-22T15:00:00'),
+                time: "3:00 PM - 5:00 PM",
+                location: "Crisler Center",
+                locationType: "physical",
+                school: "Athletics",
+                organization: "Michigan Athletics",
+                category: ["sports", "social"],
+                registrationLink: "https://mgoblue.com/calendar",
+                imageUrl: "",
+                sourceUrl: "https://mgoblue.com/calendar",
+                sourceId: "athletic-events",
+                isActive: true,
+                tags: ["basketball", "rivalry", "sports"]
+            },
+            {
+                name: "Career Center: Resume Workshop",
+                description: "Get your resume reviewed by career counselors and learn best practices for 2025 job applications.",
+                shortDescription: "Resume review and best practices workshop",
+                date: new Date('2025-02-05T16:00:00'),
+                time: "4:00 PM - 5:30 PM",
+                location: "University Career Center, 3200 Student Activities Building",
+                locationType: "physical",
+                school: "University Career Center",
+                organization: "Career Center",
+                category: ["career", "workshop"],
+                registrationLink: "https://careercenter.umich.edu/events",
+                imageUrl: "",
+                sourceUrl: "https://careercenter.umich.edu/events",
+                sourceId: "career-center",
+                isActive: true,
+                tags: ["resume", "career", "jobs"]
+            }
+        ];
+
+        document.getElementById('addBtn').addEventListener('click', async () => {
+            status.textContent = 'Adding sample events to Firestore...\n\n';
+            status.className = '';
+
+            try {
+                let successCount = 0;
+                let errorCount = 0;
+
+                for (let i = 0; i < sampleEvents.length; i++) {
+                    const event = sampleEvents[i];
+
+                    try {
+                        // Add createdAt and updatedAt timestamps
+                        const eventData = {
+                            ...event,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+
+                        await db.collection('events').add(eventData);
+                        successCount++;
+                        status.textContent += `✓ Added: ${event.name}\n`;
+                    } catch (error) {
+                        errorCount++;
+                        status.textContent += `✗ Error adding: ${event.name}\n  ${error.message}\n`;
+                    }
+                }
+
+                status.textContent += `\n✅ COMPLETE!\n${successCount} events added successfully\n${errorCount} errors\n\nNow visit https://umichcalendar.web.app/events.html to see your events!`;
+                status.className = 'success';
+
+            } catch (error) {
+                status.textContent = `Error: ${error.message}\n\nNote: You may need to adjust Firestore security rules to allow writes.`;
+                status.className = 'error';
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>

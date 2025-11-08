@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Google Auth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>Google Authentication Test</h1>
+    <p>This page tests if Google Sign-In is working.</p>
+
+    <button id="testBtn">Test Google Sign-In</button>
+
+    <div id="status">Click the button to test authentication...</div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvNSLfo6Bj3adQrfP7uOUY88nBpL3iRP0",
+            authDomain: "umichcalendar.firebaseapp.com",
+            projectId: "umichcalendar",
+            storageBucket: "umichcalendar.firebasestorage.app",
+            messagingSenderId: "871016805897",
+            appId: "1:871016805897:web:a480968d08e05cca996ad8",
+            measurementId: "G-JVJE7XZN4S"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        const status = document.getElementById('status');
+
+        // Test button
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            status.textContent = 'Attempting to sign in with Google...';
+            status.className = '';
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({
+                    prompt: 'select_account',
+                    hd: 'umich.edu'
+                });
+
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+
+                status.className = 'success';
+                status.innerHTML = `
+                    <strong>✓ Success!</strong><br>
+                    Email: ${user.email}<br>
+                    Name: ${user.displayName}<br>
+                    UID: ${user.uid}
+                `;
+
+                // Check email domain
+                if (!user.email.endsWith('@umich.edu')) {
+                    status.className = 'error';
+                    status.innerHTML += '<br><br>⚠️ Warning: Not a @umich.edu email!';
+                }
+
+            } catch (error) {
+                status.className = 'error';
+                status.innerHTML = `
+                    <strong>✗ Error</strong><br>
+                    Code: ${error.code}<br>
+                    Message: ${error.message}<br><br>
+                    <strong>Common fixes:</strong><br>
+                    • Go to <a href="https://console.firebase.google.com/project/umichcalendar/authentication/providers" target="_blank">Firebase Console</a><br>
+                    • Enable "Google" sign-in provider<br>
+                    • Click Save
+                `;
+
+                console.error('Full error:', error);
+            }
+        });
+
+        // Monitor auth state
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('User is signed in:', user.email);
+            } else {
+                console.log('User is signed out');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse all University of Michigan events - career fairs, academic lectures, social events, and more.">
+    <title>Browse Events - UMich Calendar Aggregator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="index.html" class="logo">
+                <span>📅</span>
+                <span>UMich Events</span>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="events.html" class="nav-link active">Browse Events</a></li>
+                <li><a href="profile.html" class="nav-link" id="profileLink">Profile</a></li>
+                <li><a href="#" class="nav-link" id="authLink">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Auth Modal Overlay -->
+    <div id="authModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+        <div class="card" style="max-width: 450px; width: 90%; padding: 2rem;">
+            <div style="text-align: right; margin-bottom: 1rem;">
+                <button id="closeAuthModal" onclick="window.closeAuthModal && window.closeAuthModal()" style="font-size: 1.5rem; background: none; cursor: pointer; border: none; color: #4A4A4A;">&times;</button>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <h2 style="color: #00274C; margin-bottom: 1rem;">Welcome to UMich Events</h2>
+                <p style="color: #4A4A4A; margin-bottom: 2rem;">Sign in with your UMich Google account to get personalized event recommendations.</p>
+
+                <button id="googleSignInBtn" onclick="window.handleGoogleSignIn && window.handleGoogleSignIn()" class="btn btn-primary btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem; font-size: 1rem;">
+                    <svg width="20" height="20" viewBox="0 0 48 48">
+                        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                        <path fill="none" d="M0 0h48v48H0z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+
+                <p style="font-size: 0.875rem; color: #4A4A4A; margin-top: 1.5rem;">
+                    Must use a <strong>@umich.edu</strong> email address
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" style="padding: 2rem 1.5rem;">
+        <!-- Welcome Message (for logged-in users) -->
+        <div id="welcomeMessage" class="hidden alert alert-info mb-3">
+            <span>Welcome back, <strong id="userName"></strong>! Here are your personalized event recommendations.</span>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search events by keyword, school, or location..."
+            >
+            <button class="search-button" id="searchButton">Search</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-container">
+            <h3>Filters</h3>
+
+            <div class="filter-group">
+                <label class="filter-label">Date Range</label>
+                <div class="filter-options">
+                    <button class="filter-chip active" data-filter="date" data-value="all">All Dates</button>
+                    <button class="filter-chip" data-filter="date" data-value="today">Today</button>
+                    <button class="filter-chip" data-filter="date" data-value="week">This Week</button>
+                    <button class="filter-chip" data-filter="date" data-value="month">This Month</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Category</label>
+                <div class="filter-options">
+                    <button class="filter-chip active" data-filter="category" data-value="all">All Categories</button>
+                    <button class="filter-chip" data-filter="category" data-value="career">💼 Career</button>
+                    <button class="filter-chip" data-filter="category" data-value="academic">📚 Academic</button>
+                    <button class="filter-chip" data-filter="category" data-value="networking">🤝 Networking</button>
+                    <button class="filter-chip" data-filter="category" data-value="entrepreneurship">🚀 Startup</button>
+                    <button class="filter-chip" data-filter="category" data-value="social">🎉 Social</button>
+                    <button class="filter-chip" data-filter="category" data-value="cultural">🎭 Cultural</button>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">School</label>
+                <div class="filter-options">
+                    <button class="filter-chip active" data-filter="school" data-value="all">All Schools</button>
+                    <button class="filter-chip" data-filter="school" data-value="Ross">Ross</button>
+                    <button class="filter-chip" data-filter="school" data-value="Engineering">Engineering</button>
+                    <button class="filter-chip" data-filter="school" data-value="LSA">LSA</button>
+                    <button class="filter-chip" data-filter="school" data-value="Information">SI</button>
+                    <button class="filter-chip" data-filter="school" data-value="Law">Law</button>
+                </div>
+            </div>
+
+            <button id="clearFilters" class="btn btn-outline btn-sm mt-2">Clear All Filters</button>
+        </div>
+
+        <!-- Events Container -->
+        <div id="eventsContainer">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-state-icon">🔍</div>
+                <h3>No events found</h3>
+                <p>Try adjusting your filters or search terms.</p>
+            </div>
+
+            <!-- Events List -->
+            <div id="eventsList" class="events-container">
+                <!-- Events will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-4">
+            <button id="loadMoreBtn" class="btn btn-secondary hidden">Load More Events</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>UMich Events</h3>
+                    <p>Your centralized hub for all University of Michigan events.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="events.html">Browse Events</a></li>
+                        <li><a href="profile.html">My Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 UMich Calendar Aggregator. Made with 💙 and 💛 by UMich students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/events.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

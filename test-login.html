@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login Button</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div style="max-width: 600px; margin: 100px auto; padding: 20px;">
+        <h1>Login Button Test</h1>
+
+        <button id="testLoginBtn" class="btn btn-primary" style="margin: 20px 0;">
+            Click Me to Test Login
+        </button>
+
+        <div id="status" style="padding: 20px; background: #f0f0f0; border-radius: 5px; margin: 20px 0;">
+            Status: Waiting...
+        </div>
+
+        <h2>Console Output:</h2>
+        <div id="console" style="background: #000; color: #0f0; padding: 15px; font-family: monospace; max-height: 400px; overflow-y: auto;"></div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center;">
+        <div class="card" style="max-width: 450px; width: 90%; padding: 2rem;">
+            <div style="text-align: right; margin-bottom: 1rem;">
+                <button id="closeAuthModal" style="font-size: 1.5rem; background: none; cursor: pointer; border: none; color: #4A4A4A;">&times;</button>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <h2 style="color: #00274C; margin-bottom: 1rem;">Welcome to UMich Events</h2>
+                <p style="color: #4A4A4A; margin-bottom: 2rem;">Sign in with your UMich Google account.</p>
+
+                <button id="googleSignInBtn" class="btn btn-primary btn-block" style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; padding: 1rem; font-size: 1rem;">
+                    Sign in with Google
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const consoleDiv = document.getElementById('console');
+        const statusDiv = document.getElementById('status');
+
+        // Intercept console.log
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleDiv.innerHTML += args.join(' ') + '<br>';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+
+        console.log('🔵 Page loaded');
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvNSLfo6Bj3adQrfP7uOUY88nBpL3iRP0",
+            authDomain: "umichcalendar.firebaseapp.com",
+            projectId: "umichcalendar",
+            storageBucket: "umichcalendar.firebasestorage.app",
+            messagingSenderId: "871016805897",
+            appId: "1:871016805897:web:a480968d08e05cca996ad8",
+            measurementId: "G-JVJE7XZN4S"
+        };
+
+        console.log('🔵 Initializing Firebase...');
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        console.log('✅ Firebase initialized');
+
+        // Simple modal functions
+        function showModal() {
+            console.log('📂 Opening modal');
+            statusDiv.innerHTML = 'Status: Modal opened';
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            console.log('📂 Closing modal');
+            statusDiv.innerHTML = 'Status: Modal closed';
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        async function signInWithGoogle() {
+            console.log('🔑 Starting Google sign-in...');
+            statusDiv.innerHTML = 'Status: Signing in...';
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({
+                    prompt: 'select_account',
+                    hd: 'umich.edu'
+                });
+
+                const result = await auth.signInWithPopup(provider);
+                console.log('✅ Sign-in successful:', result.user.email);
+                statusDiv.innerHTML = 'Status: Signed in as ' + result.user.email;
+                closeModal();
+            } catch (error) {
+                console.log('❌ Sign-in error:', error.message);
+                statusDiv.innerHTML = 'Status: Error - ' + error.message;
+            }
+        }
+
+        // Set up button listeners
+        console.log('🔵 Setting up button listeners...');
+
+        document.getElementById('testLoginBtn').addEventListener('click', function() {
+            console.log('🖱️ Test button clicked!');
+            statusDiv.innerHTML = 'Status: Button clicked!';
+            showModal();
+        });
+
+        document.getElementById('closeAuthModal').addEventListener('click', function() {
+            console.log('🖱️ Close button clicked');
+            closeModal();
+        });
+
+        document.getElementById('googleSignInBtn').addEventListener('click', function() {
+            console.log('🖱️ Google sign-in button clicked');
+            signInWithGoogle();
+        });
+
+        console.log('✅ All listeners set up!');
+        statusDiv.innerHTML = 'Status: Ready! Click the button above.';
+
+        // Auth state
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log('👤 User signed in:', user.email);
+                statusDiv.innerHTML = 'Status: Signed in as ' + user.email;
+            } else {
+                console.log('👤 No user signed in');
+            }
+        });
+    </script>
+</body>
+</html>
